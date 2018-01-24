@@ -1,0 +1,65 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+  # You may wish to disable always updating cookbooks in CI or other testing environments.
+  # For example:
+  #   always_update_cookbooks: <%= !ENV['CI'] %>
+  always_update_cookbooks: true
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: centos-7
+
+suites:
+#   - name: dashapp
+#     run_list:
+#       - recipe[core::default]
+#     verifier:
+#       inspec_tests:
+#         - test/smoke/default
+#     attributes:
+#       java:
+#         jdk_version: '8'
+#         install_flavor: 'oracle'
+#         oracle:
+#           accept_oracle_download_terms: true
+#         oracle_rpm:
+#           type: 'jdk'
+  - name: dashdb
+    run_list:
+      - recipe[core::install_mysql]
+    attributes:
+      # yum:
+      #   mysql-connectors-community:
+      #     repositoryid: 'mysql-connectors-community'
+      #     baseurl: 'http://repo.mysql.com/yum/mysql-connectors-community/el/$releasever/$basearch/'
+      #     gpgkey: 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql'
+      #     failovermethod: 'priority'
+      #     gpgcheck: false
+      #     enabled: true 
+      #   mysql56-community:
+      #     repositoryid: 'mysql56-community'
+      #     baseurl: 'http://repo.mysql.com/yum/mysql-5.6-community/el/$releasever/$basearch/'
+      #     gpgkey: 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql'
+      #     failovermethod: 'priority'
+      #     gpgcheck: false
+      #     enabled: true
+      #     name: 'MySQL 5.6 Community Server'
+      #   mysql56-community-dmr:
+      #     repositoryid: 'mysql56-community-dmr'
+      #     baseurl: 'http://repo.mysql.com/yum/mysql-5.6-community/el/$releasever/$basearch/'
+      #     gpgkey: 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql'
+      #     failovermethod: 'priority'
+      #     gpgcheck: false
+      #     enabled: true
+ 
+
+
+
+
+
