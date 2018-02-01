@@ -21,6 +21,4 @@ chef_version '>= 12.1' if respond_to?(:chef_version)
 
 depends 'java', '~> 1.50.0', :supermarket
 depends 'tomcat', '~> 3.0.0', :supermarket
-# depends 'yum-mysql-community', '~> 2.1.0', :supermarket
-# depends 'mysql', '~> 8.0', :supermarket
-depends 'mysql', '~> 7.0'
+depends 'mysql', '~> 7.0', :supermarket

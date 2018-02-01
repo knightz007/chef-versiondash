@@ -20,9 +20,41 @@
 #     enabled true
 #     gpgcheck true
 #  end
+
+
+ cookbook_file '/tmp/vDash.sql' do
+  source 'testdbcreation.sql'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  action :create
+end
+
+cookbook_file '/tmp/grants.sql' do
+  source 'grants.sql'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  action :create
+end
+
 mysql_service 'dash-db' do
   port '3306'
+  bind_address '0.0.0.0'
   version '5.5'
-  initial_root_password 'changeme'
+  initial_root_password 'change_me'
   action [:create, :start]
 end
+
+execute 'Create vDash DB' do
+  user 'root'
+  command "mysql -h #{node['hostname']} -u root -p'change_me' < /tmp/vDash.sql"
+end
+
+execute 'Create dash user and grant privileges' do
+  user 'root'
+  command "mysql -h #{node['hostname']} -u root -p'change_me' < /tmp/grants.sql"
+end
+
+
+

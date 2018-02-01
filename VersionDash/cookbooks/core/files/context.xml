@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context>
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+    <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
+    <Environment name="myConnectionURL" value="jdbc:mysql://172.28.128.3:3306/testdb" type="java.lang.String"/>
+    <Environment name="dbUserName" value="dashuser" type="java.lang.String"/>
+    <Environment name="dbPassword" value="dpass" type="java.lang.String"/>
+</Context>

@@ -3,9 +3,13 @@ include_recipe 'core::install_java'
 
 user 'chefed'
 
+user 'vdash_user' do
+  action :create
+end
+
 # put chefed in the group so we can make sure we don't remove it by managing cool_group
 group 'vdash_group' do
-  members 'chefed'
+  members ['chefed', 'vdash_user']
   action :create
 end
 
@@ -43,19 +47,47 @@ end
 # Drop off our own server.xml that uses a non-default port setup
 cookbook_file '/opt/tomcat_vdash/webapps/VersionDash.war' do
   source 'VersionDash.war'
-  owner 'root'
-  group 'root'
+  owner 'vdash_user'
+  group 'vdash_group'
   mode '0644'
   notifies :restart, 'tomcat_service[vdash]'
 end
 
-# start the helloworld tomcat service using a non-standard pic location
-# tomcat_service 'vdash' do
-#   action [:start, :enable]
-#   env_vars [{ 'CATALINA_BASE' => '/opt/tomcat_vdash/' }, { 'CATALINA_PID' => '/opt/tomcat_helloworld/bin/non_standard_location.pid' }, { 'SOMETHING' => 'some_value' }]
-#   sensitive true
-#   tomcat_user 'cool_user'
-#   tomcat_group 'cool_group'
+config_dir = "/opt/tomcat_vdash/webapps/VersionDash/WEB-INF/"
+
+directory config_dir do
+  owner 'vdash_user'
+  group 'vdash_group'
+  recursive true
+end
+
+cookbook_file '/opt/tomcat_vdash/webapps/VersionDash/WEB-INF/web.xml' do
+  source 'web.xml'
+  owner 'vdash_user'
+  group 'vdash_group'
+  mode '0644'
+  notifies :restart, 'tomcat_service[vdash]'
+end
+
+# config_dir = "/opt/tomcat_vdash/conf"
+
+# directory config_dir do
+#   owner 'vdash_user'
+#   group 'vdash_group'
+#   recursive true
+# end
+
+# cookbook_file '/opt/tomcat_vdash/conf/context.xml' do
+#   source 'context.xml'
+#   owner 'vdash_user'
+#   group 'vdash_group'
+#   mode '0644'
+#   notifies :restart, 'tomcat_service[vdash]'
+# end
+
+# template "#{config_dir}/database.yml" do
+#   source "database.yml.erb"
+#   ...
 # end
 
 tomcat_service 'vdash' do
@@ -64,3 +96,7 @@ tomcat_service 'vdash' do
      tomcat_user 'vdash_user'
      tomcat_group 'vdash_group'
 end
+
+
+
+
